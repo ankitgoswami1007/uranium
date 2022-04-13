@@ -1,4 +1,5 @@
 const { count } = require("console")
+const bookModel = require("../models/bookModel")
 const BookModel= require("../models/bookModel")
 
 const createBook= async function (req, res) {
@@ -80,6 +81,64 @@ const getBooksData= async function (req, res) {
     res.send({msg: allBooks})
 }
 
+const bookList = async function (req, res) {
+
+    let allBooks = await bookModel.find().select( {bookName: 1 , authorName: 1 , _id: 0} )
+    res.send({list:allBooks})
+}
+
+const getBooksInYear= async function (req, res) {
+    let data= req.body
+    //console.log(typeof data.year);
+    let allBooks = await bookModel.find({year: data.year}).select({bookName: 1 , _id: 0})
+    res.send({List: allBooks})
+}
+
+const getXINRBooks= async function (req, res) {
+    
+    // let allBooks = await bookModel.find( {
+    //     $or: [{"prices.indianPrice": '100INR' } , {"prices.indianPrice": '200INR' } ,{"prices.indianPrice": '100INR' } ]
+    // } )
+    let allBooks = await bookModel.find( {
+        "prices.indianPrice": { $in: ['100INR' , '200INR' , '500INR'] }
+    } ).select({bookName: 1 , _id: 0})
+    res.send({List: allBooks})
+}
+
+const getRandomBooks= async function (req, res) {
+    
+    let allBooks = await bookModel.find( {
+        $or: [{stockAvailable: true } , {totalPages: { $gt:  500 } } ]
+    } )
+    
+    res.send({List: allBooks})
+}
+
+const getParticularBooks= async function (req, res) {
+    let data= req.body
+    let year = data.year
+    let bookName =data.bookName
+    let authorName = data.authorName
+    let stockAvailable  = data.stockAvailable
+    let totalPages = data.totalPages
+    // console.log(totalPage);
+    // console.log(typeof totalPage);
+   
+    // let allBooks = await bookModel.find( {
+    //      $or: [ {bookName: bookName} ,{authorName: authorName} , {year : year}, {stockAvailable: stockAvailable } , {totalPages: totalPages }  ]
+    // } )
+
+    let allBooks = await bookModel.find( req.body )
+    
+    res.send({List: allBooks})
+}
+
+
 
 module.exports.createBook= createBook
 module.exports.getBooksData= getBooksData
+module.exports.bookList = bookList
+module.exports.getBooksInYear = getBooksInYear
+module.exports.getXINRBooks = getXINRBooks
+module.exports.getRandomBooks = getRandomBooks
+module.exports.getParticularBooks = getParticularBooks
