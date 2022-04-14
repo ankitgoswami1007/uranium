@@ -5,14 +5,25 @@ const BookModel= require("../models/bookModel")
 
 const createAuthor= async function (req, res) {
     let data= req.body
-    let savedData= await AuthorModel.create(data)
-    res.send({msg: savedData})
+    if(data.author_id){
+        let savedData= await AuthorModel.create(data)
+        res.send({msg: savedData})
+    }
+    else{
+        res.send("Author_ID must be Needed")
+    }
 }
 
 const createBook= async function (req, res) {
     let data= req.body
-    let savedData= await BookModel.create(data)
-    res.send({msg: savedData})
+    if(data.author_id){
+        let savedData= await BookModel.create(data)
+        res.send({msg: savedData})
+    }
+    else{
+        res.send("Author_ID must be Needed")   
+    }
+    
 }
 
 //List out the books written by "Chetan Bhagat" 
