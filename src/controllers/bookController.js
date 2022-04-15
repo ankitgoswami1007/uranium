@@ -12,13 +12,14 @@ const createBook= async function (req, res) {
     if(book.author){
         if(book.publisher){
 
-            let author = await AuthorModel.findOne({_id : book.author})
-            let publisher = await PublisherModel.findOne( {_id : book.publisher})
-            if((book.author == author._id) && book.publisher == publisher._id){
+            let authors = await AuthorModel.findOne({_id : book.author})
+            //console.log(authors)
+            let publishers = await PublisherModel.findOne( {_id : book.publisher})
+            if((authors) && (book.author == authors._id) && (publishers) && (book.publisher == publishers._id)){
                 let bookCreated = await BookModel.create(book)
                 res.send({data: bookCreated})
              }
-            else if(book.author != author._id){
+            else if(!authors){
                 res.send('author is not present')
             }
             else{
