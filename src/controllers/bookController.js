@@ -53,9 +53,28 @@ const getBooksWithAuthorPublisherDetails = async function (req, res) {
 
 }
 
+const books = async function( req , res) {
+
+    let publisherName = req.params.publisherName
+    let publishersID = await PublisherModel.findOne( {name :publisherName}).select({_id: 1})
+    let updatedIsHardCover = await BookModel.updateMany(
+        {publisher : publishersID},
+        {$set: { isHardCover: true }}
+        )
+    let authorID = await AuthorModel.find({rating : {$gt : 3.5 }}).select({_id : 1})
+    let Updatedprice = await BookModel.updateMany(
+            {author : authorID},
+            {$inc : { price:10 } }
+        )
+        res.send({UpdatedData: updatedIsHardCover})
+}
+
+
+
 
 
 module.exports.createBook= createBook
 module.exports.getBooksData= getBooksData
 module.exports.getBooksWithAuthorDetails = getBooksWithAuthorDetails
 module.exports.getBooksWithAuthorPublisherDetails = getBooksWithAuthorPublisherDetails
+module.exports.books = books
