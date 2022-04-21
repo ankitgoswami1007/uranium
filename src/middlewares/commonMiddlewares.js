@@ -11,10 +11,12 @@ const check_isFreeAppUser = function ( req, res, next) {
     if(!isFreeAppUser){
         return res.send( {message: 'The request is missing a mandatory header'} )
     }
-    // if(req.headers.isfreeappuser != 'false' || req.headers.isfreeappuser != 'true'){
-    //     res.send({message: 'Enter valid value'})
-    // }
-     req.isFreeAppUser = req.headers.isfreeappuser
+    let flag = false
+     if( req.headers.isfreeappuser == 'true'){
+         flag = true
+     }
+     req['isFreeAppUser'] = flag
+     
     next()
 }
 
