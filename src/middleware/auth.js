@@ -5,29 +5,33 @@ const jwt = require("jsonwebtoken");
 
 let authMiddleWare = function (req , res , next){
     //console.log("innerAuth");
-    let token = req.headers['x-Auth-token']
-    
-    if(!token) token = req.headers['x-auth-token']
-
-    if(!token) return res.send({status: false , message: "token must be present" })
-
-    
-
     try {
-        let decodedToken = jwt.verify( token , "functionup-uranium")
-      } catch(err) {
-        return res.send({ status: false , message: "token is invalid"})
-      }
+      let token = req.headers['x-Auth-token']
     
+      if(!token) token = req.headers['x-auth-token']
+
+      if(!token) return res.status(401).send({message: "token must be present" })
+
+      let decodedToken = jwt.verify( token , "functionup-uranium")
+      let userId = req.params.userId
+
+      if(decodedToken.userId != userId)
+        return res.status(401).send({  error: 'user is not allowed to perform this task'})
 
     next()
+      } 
+      catch(err) {
+        return res.status(401).send({  message: "token is invalid"})
+      }
+    
+    
 
 }
 
 module.exports.authMiddleWare = authMiddleWare
 
 
-//dhavan-tokan:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjYxYjE5YjhkY2IxMDJjNGUxZDYxZDkiLCJiYXRjaCI6InVyYW5pdW0iLCJvcmdhbmlzYXRpb24iOiJGdW5jdGlvblVwIiwiaWF0IjoxNjUwNTcxMTc4fQ.oA8T28PwZPOTUpTY-DLIxGuxSSNsbdBNaeBCaAUosV0"
+//dhavan-daan- tokan:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjYxYjE5YjhkY2IxMDJjNGUxZDYxZDkiLCJiYXRjaCI6InVyYW5pdW0iLCJvcmdhbmlzYXRpb24iOiJGdW5jdGlvblVwIiwiaWF0IjoxNjUwNTcxMTc4fQ.oA8T28PwZPOTUpTY-DLIxGuxSSNsbdBNaeBCaAUosV0"
 
 //imran--> "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MjYxYjBkM2U5NWVjZDBkMTcyYjI5ODQiLCJiYXRjaCI6InVyYW5pdW0iLCJvcmdhbmlzYXRpb24iOiJGdW5jdGlvblVwIiwiaWF0IjoxNjUwNTcyMDI0fQ.Y4db7n7JWEVuQgjBQtnClzMijtBqpQNlYBAUSK-FEkw"
 
