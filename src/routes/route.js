@@ -30,6 +30,6 @@ router.get("/users/:userId", auth.authMiddleWare, user_Controller.getUserData)
 router.put("/update/:userId",auth.authMiddleWare, user_Controller.updateUser)
 
 //-------- api for deleting user by using isDeleted property  to true
-router.put("/delete/:userId",auth.authMiddleWare, user_Controller.deleteUser)
+router.delete("/delete/:userId",auth.authMiddleWare, user_Controller.deleteUser)
 
 module.exports = router;
